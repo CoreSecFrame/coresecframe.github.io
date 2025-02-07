@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Same head section as index.html -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreSecurityFramework Documentation</title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/<｜end▁of▁thinking｜>/free-security-icons@main/favicon.ico">
+    <meta name="description" content="Official documentation for CoreSecurityFramework - Installation, usage, and API reference">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .doc-section {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .doc-nav {
+            position: sticky;
+            top: 100px;
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .doc-nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+
+        .doc-nav a:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container nav-content">
+            <h2>CoreSecurity</h2>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="#cli">CLI Reference</a>
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <h1>Framework Documentation</h1>
+            <p class="header-subtitle">Complete guide to installation, configuration, and API usage</p>
+        </div>
+    </header>
+
+    <div class="container" style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem; margin-top: 2rem;">
+        <div class="doc-nav">
+            <h4>Contents</h4>
+            <a href="#installation">Installation</a>
+            <a href="#quickstart">Quick Start</a>
+            <a href="#cli">CLI Reference</a>
+            <a href="#api">API Guide</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+        </div>
+
+        <main>
+            <section id="installation" class="doc-section">
+                <h2>Installation Guide</h2>
+                <div class="code-snippet">
+                    # Stable version<br>
+                    pip install coresec<br>
+                    <br>
+                    # Development version<br>
+                    git clone https://github.com/CoreSecFrame/CoreSecFrame.git<br>
+                    cd CoreSecFrame<br>
+                    pip install -e .
+                </div>
+            </section>
+
+            <section id="quickstart" class="doc-section">
+                <h2>Quick Start</h2>
+                <div class="code-snippet">
+                    # Initialize project<br>
+                    coresec init my-project<br>
+                    <br>
+                    # Run network scan<br>
+                    coresec scan network --target 192.168.1.0/24<br>
+                    <br>
+                    # Generate report<br>
+                    coresec report generate --format html
+                </div>
+            </section>
+
+            <section id="cli" class="doc-section">
+                <h2>CLI Reference</h2>
+                <div class="endpoint">
+                    <h3>Network Scanning</h3>
+                    <code>coresec scan network [options]</code>
+                    <p>Options:</p>
+                    <ul>
+                        <li><strong>--target</strong>: IP range or host</li>
+                        <li><strong>--profile</strong>: Scan intensity (light|medium|full)</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Same footer as index.html -->
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 CoreSecurityFramework. GPL-3.0 License</p>
+            <div class="social-links">
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
