@@ -78,33 +78,28 @@
                 <div class="code-snippet">
 <pre><code>FROM kalilinux/kali-rolling:latest
 
-FROM kalilinux/kali-rolling:latest
-
 FROM kalilinux/kali-rolling
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Sistema base + herramientas
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-pip python3-venv tmux git wget ca-certificates && \
+    python3 python3-pip tmux git wget ca-certificates sudo && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
+# Clonamos el framework
 WORKDIR /opt
 RUN git clone https://github.com/CoreSecFrame/CoreSecFrame.git coresecframe
 WORKDIR /opt/coresecframe
 
-RUN python3 -m venv /opt/coresecframe/venv
+# Forzamos la instalación de dependencias a nivel sistema
+RUN pip3 install --break-system-packages --upgrade pip
+RUN pip3 install --break-system-packages -r requirements.txt
 
-RUN /opt/coresecframe/venv/bin/pip install --upgrade pip && \
-    /opt/coresecframe/venv/bin/pip install -r requirements.txt
+# Creamos alias
+RUN ln -s /opt/coresecframe/main.py /usr/local/bin/coresecframe && chmod +x /usr/local/bin/coresecframe
 
-RUN ln -s /opt/coresecframe/venv/bin/python3 /usr/local/bin/python3_venv && \
-    ln -s /opt/coresecframe/venv/bin/pip /usr/local/bin/pip_venv && \
-    echo '#!/bin/bash\n/opt/coresecframe/venv/bin/python3 /opt/coresecframe/main.py "$@"' > /usr/local/bin/coresecframe && \
-    chmod +x /usr/local/bin/coresecframe
-
-RUN apt update && apt install sudo -y
-
+# Entrypoint por defecto
 CMD ["coresecframe"]
 
 </code></pre>
