@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>CoreSecurityFramework - Innovative Python Cybersecurity Toolkit</title>
-    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/free-security-icons@main/favicon.ico">
-    <meta name="description" content="Open-source Python framework for network security, forensic analysis, and penetration testing. Designed for security professionals and ethical hackers.">
-    <meta property="og:title" content="CoreSecurityFramework">
-    <meta property="og:description" content="Innovative Python Cybersecurity Toolkit">
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/free-security-icons@main/favicon.ico"/>
+    <meta name="description"
+          content="Open-source Python framework for network security, forensic analysis, and penetration testing. Designed for security professionals and ethical hackers."/>
+    <meta property="og:title" content="CoreSecurityFramework"/>
+    <meta property="og:description" content="Innovative Python Cybersecurity Toolkit"/>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css"/>
 </head>
+
 <body>
+    <!-- Navegación principal -->
     <nav class="nav">
         <div class="container nav-content">
             <h2 class="logo">CoreSecurity</h2>
             <div class="nav-links">
                 <a href="#features">Features</a>
-                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
                 <a href="docs.html">Documentation</a>
                 <a href="about.html">About Us</a>
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
             </div>
         </div>
     </nav>
 
+    <!-- Hero -->
     <header class="hero">
         <div class="container">
             <h1>CoreSecurityFramework</h1>
@@ -33,56 +38,82 @@
         </div>
     </header>
 
+    <!-- Intro con imagen y explicación -->
     <section class="intro">
         <div class="container intro-content">
             <h2>Secure by Design, Powerful by Default</h2>
-            <p>CoreSecurityFramework provides a modular architecture for building custom security tools and automating penetration testing workflows.</p>
-            <div class="code-snippet">
-                <code>
-                # Clone the repository<br>
-                git clone https://github.com/CoreSecFrame/CoreSecFrame.git<br>
-                cd CoreSecFrame<br>
-                pip install -r requirements.txt<br><br>
-                # Run the framework<br>
-                python setup.py
-                </code>
+            <p>
+                CoreSecurityFramework es un entorno modular que facilita la ejecución centralizada de múltiples
+                herramientas de ciberseguridad. Desde escaneo de vulnerabilidades hasta análisis forense, 
+                cubrimos todas las fases esenciales para tu estrategia de seguridad.
+            </p>
+            <!-- Imagen de ejemplo (sustituir por la tuya) -->
+            <img 
+                src="https://placehold.co/800x400?text=CoreSecurity+Showcase" 
+                alt="Ejemplo de interfaz de CoreSecurityFramework"
+                style="border-radius: 8px; margin-top: 2rem;"
+            />
+        </div>
+    </section>
+
+    <!-- Sección de imágenes destacadas de ejemplo (opcional) -->
+    <section class="container" style="padding: 2rem 0; text-align:center;">
+        <h2>In Action</h2>
+        <p>Estas capturas ilustran cómo se integran las herramientas y la forma en que se presentan los resultados.</p>
+        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 2rem;">
+            <div>
+                <img 
+                    src="https://placehold.co/600x350?text=Screenshot+1" 
+                    alt="Screenshot 1" 
+                    style="border-radius: 8px; width: 100%;"
+                />
+            </div>
+            <div>
+                <img 
+                    src="https://placehold.co/600x350?text=Screenshot+2" 
+                    alt="Screenshot 2"
+                    style="border-radius: 8px; width: 100%;"
+                />
             </div>
         </div>
     </section>
 
+    <!-- Features -->
     <section id="features" class="features container">
         <div class="feature">
             <i class="fas fa-bug"></i>
             <h3>Penetration Testing</h3>
-            <p>Effortless use of vulnerability detection and exploit tools with pre-built modules.</p>
+            <p>Integra de forma sencilla módulos de detección de vulnerabilidades y herramientas de explotación.</p>
         </div>
         <div class="feature">
             <i class="fas fa-terminal"></i>
             <h3>CLI Interface</h3>
-            <p>Powerful command-line interface with smart auto-completion and seamless system integration.</p>
+            <p>Poderosa interfaz de línea de comandos con autocompletado para un flujo de trabajo productivo.</p>
         </div>
         <div class="feature">
             <i class="fas fa-code-branch"></i>
             <h3>Modular Architecture</h3>
-            <p>Easily extendable with custom modules developed by the community or by you.</p>
+            <p>Extiende el framework con tus propios módulos y colabora con la comunidad para crear nuevas herramientas.</p>
         </div>
         <div class="feature">
             <i class="fas fa-shield-alt"></i>
             <h3>Full Deployability</h3>
-            <p>Complete and user-friendly deployment solution to get you started fast.</p>
+            <p>Implementación sencilla que permite comenzar a trabajar en cuestión de minutos.</p>
         </div>
     </section>
 
+    <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <h2>Join the Security Revolution</h2>
-            <p>Experience seamless integration of your favorite tools.</p>
-            <a href="https://github.com/CoreSecFrame/CoreSecFrame" class="cta-btn">
-                <i class="fab fa-github"></i> Star on GitHub
+            <h2>Deploy it completly on Docker</h2>
+            <p>Deploy your own CoreSecurityFramework instance with Docker.</p>
+            <a href="docker.html" class="cta-btn">
+                <i class="fas fa-book"></i> Docker Guide
             </a>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
         <div class="container footer-content">
             <p>&copy; 2025 CoreSecurityFramework. GPL-3.0 License</p>

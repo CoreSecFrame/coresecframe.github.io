@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head (cabecera) coherente con el resto del sitio -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dockerizing CoreSecFrame</title>
+    <link rel="icon" type="image/x-icon"
+          href="https://cdn.jsdelivr.net/gh/free-security-icons@main/favicon.ico">
+    <meta name="description"
+          content="Tutorial on how to create a Docker image for CoreSecFrame based on Kali Linux, cloning from GitHub">
+
+    <!-- Fuentes y estilos del proyecto -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Ajustar la ruta si tu archivo styles.css está en otra ubicación -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="nav">
+        <div class="container nav-content">
+            <h2 class="logo">CoreSecurity</h2>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="install.html">Install</a>
+                <a href="about.html">About Us</a>
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero (encabezado) -->
+    <header class="hero docs-hero">
+        <div class="container">
+            <h1>Dockerizing CoreSecFrame</h1>
+            <p class="header-subtitle">
+                Build a Docker image based on Kali Linux with CoreSecFrame
+                automatically cloned and installed.
+            </p>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="container docs-container" style="margin-bottom: 3rem;">
+        <!-- Menú lateral (opcional) -->
+        <aside class="doc-nav">
+            <h4>Contents</h4>
+            <a href="#overview">Overview</a>
+            <a href="#dockerfile">1. Create Dockerfile</a>
+            <a href="#build">2. Build the Image</a>
+            <a href="#run">3. Run a Container</a>
+            <a href="#shell">4. (Optional) Shell Access</a>
+        </aside>
+
+        <!-- Secciones de documentación -->
+        <main class="doc-content">
+            <!-- Descripción general -->
+            <section id="overview" class="doc-section">
+                <h2>Overview</h2>
+                <p>
+                    This guide walks you through creating a Docker image for
+                    <strong>CoreSecFrame</strong>, based on
+                    <strong>Kali Linux</strong>, by directly cloning the
+                    official GitHub repository. This means you won't need
+                    to copy any local files into the container; the Dockerfile
+                    handles everything.
+                </p>
+            </section>
+
+            <!-- Paso 1: Dockerfile -->
+            <section id="dockerfile" class="doc-section">
+                <h2>1. Create the Dockerfile</h2>
+                <p>
+                    In your project folder, or any directory you choose for building the image,
+                    create a file named <code>Dockerfile</code> and copy in the following content:
+                </p>
+                <div class="code-snippet">
+<pre><code>FROM kalilinux/kali-rolling:latest
+
+# Update and upgrade packages
+RUN apt-get update && apt-get upgrade -y
+
+# Install Python, pip, venv, tmux, git, etc.
+RUN apt-get install -y python3 python3-pip python3-venv tmux git
+
+# Clone the CoreSecFrame repository directly into /opt/coresecframe
+RUN git clone https://github.com/CoreSecFrame/CoreSecFrame.git /opt/coresecframe
+
+# Set our working directory
+WORKDIR /opt/coresecframe
+
+# Install Python dependencies
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
+
+# Create a symbolic link to run "coresecframe" from anywhere
+RUN ln -s /opt/coresecframe/main.py /usr/local/bin/coresecframe \
+    && chmod +x /usr/local/bin/coresecframe \
+    && chmod -R 755 /opt/coresecframe
+
+# Set the default command to run the framework
+CMD ["coresecframe"]
+</code></pre>
+                </div>
+                <p>
+                    This Dockerfile does the following:
+                </p>
+                <ul>
+                    <li>Uses <strong>kalilinux/kali-rolling</strong> as the base image.</li>
+                    <li>Installs Python, pip, git, and other necessary packages.</li>
+                    <li>Clones the CoreSecFrame code from GitHub into <code>/opt/coresecframe</code>.</li>
+                    <li>Installs Python dependencies from <code>requirements.txt</code>.</li>
+                    <li>Creates a simple symbolic link to run <code>coresecframe</code> anywhere.</li>
+                    <li>Sets <code>coresecframe</code> as the default command.</li>
+                </ul>
+            </section>
+
+            <!-- Paso 2: Build -->
+            <section id="build" class="doc-section">
+                <h2>2. Build the Docker Image</h2>
+                <p>
+                    Open a terminal in the same folder as your <code>Dockerfile</code> and run:
+                </p>
+                <div class="code-snippet">
+<pre><code>docker build -t coresecframe .
+</code></pre>
+                </div>
+                <p>
+                    This command tells Docker to build an image tagged as
+                    <strong>coresecframe</strong> using the current directory
+                    (dot <code>.</code>) as the build context. Once finished,
+                    you’ll have a new Docker image named “coresecframe” that
+                    contains Kali plus CoreSecFrame.
+                </p>
+            </section>
+
+            <!-- Paso 3: Run -->
+            <section id="run" class="doc-section">
+                <h2>3. Run a Container</h2>
+                <p>
+                    Create and start a container from the newly built image with:
+                </p>
+                <div class="code-snippet">
+<pre><code>docker run -it --rm coresecframe
+</code></pre>
+                </div>
+                <p>
+                    <strong>-it</strong> provides an interactive terminal,
+                    and <strong>--rm</strong> removes the container once
+                    it stops, keeping your system clean of unused containers.
+                    By default, this runs the <code>CMD ["coresecframe"]</code>
+                    specified in the Dockerfile.
+                </p>
+            </section>
+
+            <!-- Paso 4: Shell -->
+            <section id="shell" class="doc-section">
+                <h2>4. (Optional) Shell Access</h2>
+                <p>
+                    If you want to explore or troubleshoot inside the container,
+                    you can override the default command with <code>/bin/bash</code>:
+                </p>
+                <div class="code-snippet">
+<pre><code>docker run -it --rm coresecframe /bin/bash
+</code></pre>
+                </div>
+                <p>
+                    This drops you into a Bash shell within the container,
+                    allowing you to inspect files, manually run
+                    <code>coresecframe</code>, or perform any additional tasks.
+                </p>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 CoreSecurityFramework. GPL-3.0 License</p>
+            <div class="social-links">
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
