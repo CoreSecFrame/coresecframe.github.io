@@ -1,82 +1,760 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!-- Head (cabecera) coherente con el resto del sitio -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoreSecurity - Docker</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <title>CoreSecurity - Docker Deployment</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <meta name="description"
-          content="Tutorial on how to create a Docker image for CoreSecFrame based on Kali Linux, cloning from GitHub">
+        content="Complete Docker deployment guide for CoreSecurityFramework with web interface and remote desktop access">
 
-    <!-- Fuentes y estilos del proyecto -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <!-- Ajustar la ruta si tu archivo styles.css está en otra ubicación -->
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para docker mejorado pero conservando estructura original */
+        .docker-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #2563eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .docker-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        /* Navegación flotante */
+        .floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .floating-nav.show {
+            display: block;
+        }
+
+        .floating-nav-item {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .floating-nav-item:hover,
+        .floating-nav-item.active {
+            background: var(--background-color);
+            color: var(--secondary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        /* Mejoras visuales conservando estructura original */
+        .docs-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            padding: 3rem 0;
+            align-items: start;
+        }
+
+        .doc-nav {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 100px;
+            border: 1px solid var(--border-color);
+        }
+
+        .doc-nav h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .doc-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .doc-nav a:hover {
+            background: var(--background-color);
+            color: var(--text-primary);
+            border-left-color: var(--secondary-color);
+            transform: translateX(4px);
+        }
+
+        /* Secciones mejoradas */
+        .doc-section {
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .doc-section:last-child {
+            border-bottom: none;
+        }
+
+        .doc-section h2 {
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .doc-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Docker benefits modernos */
+        .docker-benefits {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .docker-benefits h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .benefit-item i {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .benefit-item h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Container features */
+        .container-features {
+            background: var(--background-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .container-features h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            margin-left: 1rem;
+        }
+
+        .feature-list li {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        /* Quick steps modernos */
+        .quick-steps {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .quick-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .quick-step:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-icon {
+            flex-shrink: 0;
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .step-content h4 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Code snippets mejorados */
+        .code-snippet {
+            background: var(--primary-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-snippet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .code-snippet pre {
+            margin: 0;
+        }
+
+        .code-snippet code {
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.875rem;
+            color: var(--accent-color);
+        }
+
+        /* Access links modernos */
+        .access-links {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .access-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            padding: 0.75rem;
+            background: var(--background-color);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .access-link:hover {
+            background: var(--surface-color);
+            transform: translateX(4px);
+        }
+
+        .access-link i {
+            color: var(--secondary-color);
+            width: 1.25rem;
+        }
+
+        /* Dockerfile content */
+        .dockerfile-content {
+            margin: 2rem 0;
+        }
+
+        .dockerfile-content h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .dockerfile-explanation {
+            margin-top: 2rem;
+        }
+
+        .explanation-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .explanation-item {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .explanation-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .explanation-item h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .explanation-item i {
+            color: var(--secondary-color);
+        }
+
+        .explanation-item p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        /* Build options */
+        .build-options {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .build-option {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .build-option h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .build-tips {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .build-tips h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .build-tips ul {
+            margin-left: 1rem;
+        }
+
+        .build-tips li {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        /* Deployment scenarios */
+        .deployment-scenarios {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .deployment-scenario {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .deployment-scenario h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .deployment-scenario i {
+            color: var(--secondary-color);
+        }
+
+        /* Access methods grid */
+        .access-methods-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .access-method {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .access-method:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-header h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .method-header i {
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        /* Environment variables table */
+        .env-vars-table {
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .env-vars-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .env-vars-table th {
+            background: var(--background-color);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .env-vars-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .env-vars-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .env-examples {
+            margin: 2rem 0;
+        }
+
+        .env-examples h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Management sections */
+        .management-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .management-section {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .management-section h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Troubleshooting */
+        .troubleshooting-items {
+            margin: 2rem 0;
+        }
+
+        .trouble-item {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .trouble-item h4 {
+            color: var(--text-primary);
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .trouble-item i {
+            color: #f59e0b;
+        }
+
+        .trouble-solutions h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .troubleshooting-tips {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            margin: 2rem 0;
+        }
+
+        .troubleshooting-tips h4 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .troubleshooting-tips ul {
+            margin-left: 1rem;
+        }
+
+        .troubleshooting-tips li {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .floating-nav {
+                display: none !important;
+            }
+
+            .docs-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .doc-nav {
+                position: static;
+            }
+
+            .quick-step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .management-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .floating-nav {
+                display: block;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Barra de navegación -->
+    <!-- Navigation -->
     <nav class="nav">
         <div class="container nav-content">
             <h2 class="logo">CoreSecurity</h2>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="docs.html">Documentation</a>
-                <a href="docker.html">Dockerfile</a>
-                <a href="about.html">About Us</a>
-                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
+                <a href="webapp.html">Web Interface</a>
+                <a href="docker.html">Docker</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/orgs/CoreSecFrame/repositories">GitHub</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero (encabezado) -->
-    <header class="hero docs-hero">
+    <!-- Hero -->
+    <header class="hero docker-hero">
         <div class="container">
-            <h1>Dockerizing CoreSecFrame</h1>
+            <h1>Docker Deployment Guide</h1>
             <p class="header-subtitle">
-                Build a Docker image based on Kali Linux with CoreSecFrame
-                automatically cloned and installed.
+                Complete containerized deployment with CLI, web interface, and remote desktop access
             </p>
         </div>
     </header>
 
-    <!-- Contenido principal -->
-    <div class="container docs-container" style="margin-bottom: 3rem;">
-        <!-- Menú lateral (opcional) -->
+    <!-- Main Content -->
+    <div class="container docs-container">
+        <!-- Sidebar -->
         <aside class="doc-nav">
-            <h4>Contents</h4>
+            <h4>Docker Guide</h4>
             <a href="#overview">Overview</a>
-            <a href="#dockerfile">1. Create Dockerfile</a>
-            <a href="#build">2. Build the Image</a>
-            <a href="#run">3. Run a Container</a>
-            <a href="#shell">4. (Optional) Shell Access</a>
+            <a href="#cli-deployment">CLI Docker Deployment</a>
+            <a href="#web-deployment">Web Docker Deployment</a>
+            <a href="#persistent-storage">Persistent Storage</a>
+            <a href="#container-management">Container Management</a>
+            <a href="#production-setup">Production Setup</a>
+            <a href="#troubleshooting">Troubleshooting</a>
         </aside>
 
-        <!-- Secciones de documentación -->
+        <!-- Content -->
         <main class="doc-content">
-            <!-- Descripción general -->
+            <!-- Overview -->
             <section id="overview" class="doc-section">
-                <h2>Overview</h2>
+                <h2>Docker Deployment Overview</h2>
                 <p>
-                    This guide walks you through creating a Docker image for
-                    <strong>CoreSecFrame</strong>, based on
-                    <strong>Kali Linux</strong>, by directly cloning the
-                    official GitHub repository. This means you won't need
-                    to copy any local files into the container; the Dockerfile
-                    handles everything.
+                    CoreSecurityFramework is designed for containerized deployment using Docker.
+                    This approach provides complete environment isolation, simplified deployment,
+                    and consistent behavior across different systems.
                 </p>
+
+                <div class="docker-benefits">
+                    <h4>Why Docker?</h4>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h5>Isolation</h5>
+                                <p>Complete environment isolation from host system</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-download"></i>
+                            <div>
+                                <h5>Easy Deployment</h5>
+                                <p>One-command deployment across any Docker-supported system</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-sync-alt"></i>
+                            <div>
+                                <h5>Consistency</h5>
+                                <p>Identical behavior regardless of host OS</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-cogs"></i>
+                            <div>
+                                <h5>Pre-configured</h5>
+                                <p>All dependencies and tools pre-installed and configured</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-features">
+                    <h4>What's Included in the Container</h4>
+                    <ul class="feature-list">
+                        <li><strong>Kali Linux Base:</strong> Complete Kali Linux rolling distribution</li>
+                        <li><strong>CoreSecurityFramework:</strong> Latest version with all modules</li>
+                        <li><strong>Web Interface:</strong> Browser-based management dashboard</li>
+                        <li><strong>noVNC Server:</strong> Remote desktop access via web browser</li>
+                        <li><strong>Security Tools:</strong> Pre-installed common security tools</li>
+                        <li><strong>Development Environment:</strong> Python, Git, and development tools</li>
+                    </ul>
+                </div>
             </section>
 
-            <!-- Paso 1: Dockerfile -->
-            <section id="dockerfile" class="doc-section">
-                <h2>1. Create the Dockerfile</h2>
-                <p>
-                    In your project folder, or any directory you choose for building the image,
-                    create a file named <code>Dockerfile</code> and copy in the following content:
-                </p>
-                <div class="code-snippet">
-<pre><code>FROM kalilinux/kali-rolling:latest
+            <!-- Quick Deployment -->
+            <section id="cli-deployment" class="doc-section">
+                <h2>CLI Deployment</h2>
+                <p>Get CoreSecurityFramework running in less than 5 minutes with these simple commands.</p>
+
+                <div class="quick-steps">
+                    <div class="quick-step">
+                        <div class="step-icon">1</div>
+                        <div class="step-content">
+                            <h4>Create the Dockerfile</h4>
+                            <p>In your project folder, or any directory you choose for building the image, create a file
+                                named Dockerfile and copy in the following content:</p>
+                            <div class="code-snippet">
+                                <pre><code>FROM kalilinux/kali-rolling:latest
 
 FROM kalilinux/kali-rolling
 
@@ -96,76 +774,298 @@ RUN pip3 install --break-system-packages -r requirements.txt
 RUN ln -s /opt/coresecframe/main.py /usr/local/bin/coresecframe && chmod +x /usr/local/bin/coresecframe
 
 CMD ["coresecframe"]
-
 </code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-step">
+                        <div class="step-icon">2</div>
+                        <div class="step-content">
+                            <h4>Build the Docker Image</h4>
+                            <div class="code-snippet">
+                                <pre><code>docker build -t coresecframe .</code></pre>
+                            </div>
+                            <p><small>This command tells Docker to build an image tagged as coresecframe using the
+                                    current directory (dot .) as the build context. Once finished, you’ll have a new
+                                    Docker image named “coresecframe” that contains Kali plus CoreSecFrame.
+
+                                </small></p>
+                        </div>
+                    </div>
+
+                    <div class="quick-step">
+                        <div class="step-icon">3</div>
+                        <div class="step-content">
+                            <h4>Run a Container</h4>
+                            <p>Create and start a container from the newly built image with:</p>
+                            <div class="code-snippet">
+                                <pre><code>docker run -it --rm coresecframe</code></pre>
+                            </div>
+                            <p><small>-it provides an interactive terminal, and --rm removes the container once it
+                                    stops, keeping your system clean of unused containers. By default, this runs the CMD
+                                    ["coresecframe"] specified in the Dockerfile.</small>
+                        </div>
+                    </div>
                 </div>
-                <p>
-                    This Dockerfile does the following:
-                </p>
-                <ul>
-                    <li>Uses <strong>kalilinux/kali-rolling</strong> as the base image.</li>
-                    <li>Installs Python, pip, git, and other necessary packages.</li>
-                    <li>Clones the CoreSecFrame code from GitHub into <code>/opt/coresecframe</code>.</li>
-                    <li>Installs Python dependencies from <code>requirements.txt</code>.</li>
-                    <li>Creates a simple symbolic link to run <code>coresecframe</code> anywhere.</li>
-                    <li>Sets <code>coresecframe</code> as the default command.</li>
-                </ul>
             </section>
 
-            <!-- Paso 2: Build -->
-            <section id="build" class="doc-section">
-                <h2>2. Build the Docker Image</h2>
-                <p>
-                    Open a terminal in the same folder as your <code>Dockerfile</code> and run:
-                </p>
-                <div class="code-snippet">
-<pre><code>docker build -t coresecframe .
-</code></pre>
-                </div>
-                <p>
-                    This command tells Docker to build an image tagged as
-                    <strong>coresecframe</strong> using the current directory
-                    (dot <code>.</code>) as the build context. Once finished,
-                    you’ll have a new Docker image named “coresecframe” that
-                    contains Kali plus CoreSecFrame.
-                </p>
+            <!-- WEB Deployment -->
+            <section id="web-deployment" class="doc-section">
+                <h2>Web Deployment</h2>
+                <p>WORKING ON THIS FEATURE</p>
             </section>
 
-            <!-- Paso 3: Run -->
-            <section id="run" class="doc-section">
-                <h2>3. Run a Container</h2>
-                <p>
-                    Create and start a container from the newly built image with:
-                </p>
+            <!-- Persistent Storage -->
+            <section id="persistent-storage" class="doc-section">
+                <h2>Persistent Storage</h2>
+                <p>Configure persistent storage for your CoreSecurityFramework data and configurations.</p>
+
                 <div class="code-snippet">
-<pre><code>docker run -it --rm coresecframe
-</code></pre>
+                    <pre><code># Create named volumes
+docker volume create coresec_data
+docker volume create coresec_config
+
+# Run with persistent storage
+docker run -d \
+  -p 8080:8080 \
+  -p 6080:6080 \
+  -v coresec_data:/opt/coresecframe/data \
+  -v coresec_config:/opt/coresecframe/config \
+  --name coresecframe \
+  coresecframe</code></pre>
                 </div>
-                <p>
-                    <strong>-it</strong> provides an interactive terminal,
-                    and <strong>--rm</strong> removes the container once
-                    it stops, keeping your system clean of unused containers.
-                    By default, this runs the <code>CMD ["coresecframe"]</code>
-                    specified in the Dockerfile.
-                </p>
             </section>
 
-            <!-- Paso 4: Shell -->
-            <section id="shell" class="doc-section">
-                <h2>4. (Optional) Shell Access</h2>
-                <p>
-                    If you want to explore or troubleshoot inside the container,
-                    you can override the default command with <code>/bin/bash</code>:
-                </p>
-                <div class="code-snippet">
-<pre><code>docker run -it --rm coresecframe /bin/bash
-</code></pre>
+            <!-- Container Management -->
+            <section id="container-management" class="doc-section">
+                <h2>Container Management</h2>
+                <p>Essential commands for managing your CoreSecurityFramework container.</p>
+
+                <div class="management-sections">
+                    <div class="management-section">
+                        <h4>Basic Operations</h4>
+                        <div class="code-snippet">
+                            <pre><code># Start container
+docker start coresecframe
+
+# Stop container
+docker stop coresecframe
+
+# Restart container
+docker restart coresecframe
+
+# Remove container
+docker rm coresecframe
+
+# View container status
+docker ps -a</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="management-section">
+                        <h4>Monitoring & Logs</h4>
+                        <div class="code-snippet">
+                            <pre><code># View container logs
+docker logs coresecframe
+
+# Follow logs in real-time
+docker logs -f coresecframe
+
+# View resource usage
+docker stats coresecframe
+
+# Inspect container details
+docker inspect coresecframe</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="management-section">
+                        <h4>Backup & Restore</h4>
+                        <div class="code-snippet">
+                            <pre><code># Backup container data
+docker cp coresecframe:/opt/coresecframe/data ./backup/
+
+# Create container snapshot
+docker commit coresecframe coresecframe:backup-$(date +%Y%m%d)
+
+# Export container
+docker export coresecframe > coresecframe-backup.tar
+
+# Import container
+docker import coresecframe-backup.tar coresecframe:restored</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="management-section">
+                        <h4>Updates & Maintenance</h4>
+                        <div class="code-snippet">
+                            <pre><code># Update to latest image
+docker pull coresecframe:latest
+docker stop coresecframe
+docker rm coresecframe
+docker run -d [your-options] coresecframe:latest
+
+# Clean up unused images
+docker image prune
+
+# Clean up system
+docker system prune -a</code></pre>
+                        </div>
+                    </div>
                 </div>
-                <p>
-                    This drops you into a Bash shell within the container,
-                    allowing you to inspect files, manually run
-                    <code>coresecframe</code>, or perform any additional tasks.
-                </p>
+            </section>
+
+            <!-- Production Setup -->
+            <section id="production-setup" class="doc-section">
+                <h2>Production Setup</h2>
+                <p>Best practices for deploying CoreSecurityFramework in production environments.</p>
+
+                <div class="code-snippet">
+                    <pre><code># Production deployment with all recommended settings
+docker run -d \
+  --name coresecframe-prod \
+  --restart=unless-stopped \
+  --memory="4g" \
+  --cpus="2" \
+  -p 8080:8080 \
+  -p 6080:6080 \
+  -v coresec_data:/opt/coresecframe/data \
+  -v coresec_config:/opt/coresecframe/config \
+  -v /var/log/coresecframe:/opt/coresecframe/logs \
+  -e CORESEC_DEBUG=false \
+  -e CORESEC_AUTO_UPDATE=false \
+  coresecframe</code></pre>
+                </div>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting" class="doc-section">
+                <h2>Docker Troubleshooting</h2>
+                <p>Common Docker-related issues and their solutions.</p>
+
+                <div class="troubleshooting-items">
+                    <div class="trouble-item">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Container Won't Start</h4>
+                        <p><strong>Symptoms:</strong> Container exits immediately or fails to start</p>
+                        <div class="trouble-solutions">
+                            <h5>Check Docker Logs</h5>
+                            <div class="code-snippet">
+                                <pre><code>docker logs coresecframe</code></pre>
+                            </div>
+                            <h5>Verify Port Availability</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check if ports are in use
+netstat -tulpn | grep :8080
+netstat -tulpn | grep :6080
+
+# Use different ports if needed
+docker run -p 9080:8080 -p 7080:6080 ...</code></pre>
+                            </div>
+                            <h5>Check System Resources</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check available memory
+free -h
+
+# Check disk space
+df -h</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trouble-item">
+                        <h4><i class="fas fa-network-wired"></i> Network Connectivity Issues</h4>
+                        <p><strong>Symptoms:</strong> Cannot access web interfaces or container networking problems</p>
+                        <div class="trouble-solutions">
+                            <h5>Verify Port Mapping</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check port mappings
+docker port coresecframe
+
+# Test local connectivity
+curl -I http://localhost:8080</code></pre>
+                            </div>
+                            <h5>Check Firewall Settings</h5>
+                            <div class="code-snippet">
+                                <pre><code># Ubuntu/Debian
+sudo ufw status
+sudo ufw allow 8080
+sudo ufw allow 6080
+
+# CentOS/RHEL
+sudo firewall-cmd --list-ports
+sudo firewall-cmd --add-port=8080/tcp --permanent
+sudo firewall-cmd --add-port=6080/tcp --permanent</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trouble-item">
+                        <h4><i class="fas fa-memory"></i> Performance Issues</h4>
+                        <p><strong>Symptoms:</strong> Slow container performance or out of memory errors</p>
+                        <div class="trouble-solutions">
+                            <h5>Increase Resource Limits</h5>
+                            <div class="code-snippet">
+                                <pre><code># Run with more resources
+docker run -d \
+ --memory="4g" \
+ --cpus="2" \
+ -p 8080:8080 \
+ -p 6080:6080 \
+ coresecframe</code></pre>
+                            </div>
+                            <h5>Monitor Resource Usage</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check real-time stats
+docker stats coresecframe
+
+# Check container processes
+docker exec coresecframe top</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trouble-item">
+                        <h4><i class="fas fa-desktop"></i> VNC/noVNC Issues</h4>
+                        <p><strong>Symptoms:</strong> Remote desktop not working or display issues</p>
+                        <div class="trouble-solutions">
+                            <h5>Check VNC Services</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check if VNC processes are running
+docker exec coresecframe ps aux | grep vnc
+docker exec coresecframe ps aux | grep Xvfb
+
+# Restart VNC services
+docker exec coresecframe pkill -f vnc
+docker exec coresecframe pkill -f Xvfb
+docker restart coresecframe</code></pre>
+                            </div>
+                            <h5>Test VNC Connection</h5>
+                            <div class="code-snippet">
+                                <pre><code># Check if VNC port is listening
+docker exec coresecframe netstat -tulpn | grep :5900
+
+# Test websockify
+docker exec coresecframe netstat -tulpn | grep :6080</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="troubleshooting-tips">
+                    <h4>General Troubleshooting Tips</h4>
+                    <ul>
+                        <li><strong>Check Logs First:</strong> Always start with <code>docker logs coresecframe</code>
+                        </li>
+                        <li><strong>Verify Resources:</strong> Ensure adequate CPU, memory, and disk space</li>
+                        <li><strong>Test Incrementally:</strong> Start with basic deployment, then add complexity</li>
+                        <li><strong>Use Debug Mode:</strong> Enable debug mode with <code>-e CORESEC_DEBUG=true</code>
+                        </li>
+                        <li><strong>Check Docker Version:</strong> Ensure you're using a recent Docker version</li>
+                        <li><strong>Network Isolation:</strong> Test with <code>--network host</code> to eliminate
+                            network issues</li>
+                    </ul>
+                </div>
             </section>
         </main>
     </div>
@@ -173,12 +1073,132 @@ CMD ["coresecframe"]
     <!-- Footer -->
     <footer>
         <div class="container footer-content">
-            <p>&copy; 2025 CoreSecurityFramework. GPL-3.0 License</p>
+            <p><span class="copyleft">&copy;</span> 2025 CoreSecurityFramework. GPL-3.0 License</p>
             <div class="social-links">
                 <a href="https://github.com/CoreSecFrame/CoreSecFrame"><i class="fab fa-github"></i></a>
                 <a href="#"><i class="fab fa-discord"></i></a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Floating navigation functionality
+        window.addEventListener('scroll', function () {
+            const floatingNav = document.getElementById('floatingNav');
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+
+            // Show floating nav after scrolling past hero section
+            if (scrollPosition > windowHeight * 0.5) {
+                floatingNav.classList.add('show');
+            } else {
+                floatingNav.classList.remove('show');
+            }
+
+            // Update active navigation item based on scroll position
+            const sections = document.querySelectorAll('.doc-section');
+            const navItems = document.querySelectorAll('.floating-nav-item');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for animation effects
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.quick-step, .explanation-item, .build-option, .deployment-scenario, .access-method, .management-section, .trouble-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Add code copy functionality
+        document.querySelectorAll('.code-snippet').forEach(block => {
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            copyBtn.style.cssText = `
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(255,255,255,0.1);
+                border: none;
+                color: white;
+                padding: 0.5rem;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background 0.2s ease;
+                z-index: 10;
+            `;
+            copyBtn.onmouseover = () => copyBtn.style.background = 'rgba(255,255,255,0.2)';
+            copyBtn.onmouseout = () => copyBtn.style.background = 'rgba(255,255,255,0.1)';
+
+            copyBtn.onclick = () => {
+                const code = block.querySelector('pre').textContent;
+                navigator.clipboard.writeText(code).then(() => {
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 2000);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = code;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 2000);
+                });
+            };
+
+            block.style.position = 'relative';
+            block.appendChild(copyBtn);
+        });
+    </script>
 </body>
+
 </html>

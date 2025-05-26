@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreSecurity - Web Interface</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta name="description"
+        content="Web interface and remote desktop access for CoreSecurityFramework via noVNC and browser-based management">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para webapp mejorada */
+        .webapp-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0891b2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .webapp-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+
+        .webapp-container {
+            display: block;
+            padding: 0;
+        }
+
+        /* Navegación flotante */
+        .floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .floating-nav.show {
+            display: block;
+        }
+
+        .floating-nav-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .floating-nav-item:hover,
+        .floating-nav-item.active {
+            background: var(--background-color);
+            color: var(--secondary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        /* Secciones con layout mejorado */
+        .webapp-section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .webapp-section:nth-child(even) {
+            background: var(--background-color);
+        }
+
+        .webapp-section:nth-child(odd) {
+            background: var(--surface-color);
+        }
+
+        /* Headers de sección modernos */
+        .section-header-modern {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 4rem auto;
+        }
+
+        .section-header-modern h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header-modern .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .section-badge-modern {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Cards modernas */
+        .feature-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        }
+
+        .feature-card-modern:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-card-modern.featured {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .feature-icon-modern {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-card-modern h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card-modern p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list-modern {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list-modern li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .feature-list-modern li::before {
+            content: '✨';
+            font-size: 1rem;
+        }
+
+        /* Sección de acceso mejorada */
+        .access-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .access-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+
+        .access-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .access-url-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+
+        .access-url-card h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .url-display {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--accent-color);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Setup steps mejorados */
+        .setup-process {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .setup-step-modern {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            background: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .setup-step-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .step-number-modern {
+            flex-shrink: 0;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-content-modern h4 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .step-content-modern p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        /* Código mejorado */
+        .code-block-modern {
+            background: var(--primary-color);
+            color: var(--accent-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .code-block-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+        }
+
+        /* Setup info mejorada */
+        .setup-info-modern {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px solid var(--success-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .setup-info-modern h5 {
+            color: var(--success-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .setup-options {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .setup-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .option-number {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: var(--success-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Tabla de comparación mejorada */
+        .comparison-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-modern table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-modern th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .comparison-modern td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-modern tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-modern tr:nth-child(even) {
+            background: var(--background-color);
+        }
+
+        .feature-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .feature-check i {
+            font-size: 1.125rem;
+        }
+
+        /* Troubleshooting mejorado */
+        .trouble-cards {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .trouble-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .trouble-card-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .trouble-header-modern {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trouble-icon-modern {
+            flex-shrink: 0;
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .trouble-content-modern h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .trouble-content-modern p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .solutions-list {
+            background: var(--background-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .solutions-list h5 {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .solutions-list ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .solutions-list li {
+            margin: 0.75rem 0;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .floating-nav {
+                display: none !important;
+            }
+
+            .section-header-modern h2 {
+                font-size: 2rem;
+            }
+
+            .feature-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-step-modern {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .trouble-header-modern {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .floating-nav {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container nav-content">
+            <h2 class="logo">CoreSecurity</h2>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="webapp.html">Web Interface</a>
+                <a href="docker.html">Docker</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/orgs/CoreSecFrame/repositories">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Floating Navigation -->
+    <nav class="floating-nav" id="floatingNav">
+        <a href="#overview" class="floating-nav-item">Overview</a>
+        <a href="#access" class="floating-nav-item">Access</a>
+        <a href="#features" class="floating-nav-item">Features</a>
+        <a href="#setup" class="floating-nav-item">Setup</a>
+        <a href="#comparison" class="floating-nav-item">Comparison</a>
+        <a href="#troubleshooting" class="floating-nav-item">Help</a>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero webapp-hero">
+        <div class="container">
+            <h1>Web Interface</h1>
+            <p class="header-subtitle">
+                Access CoreSecurityFramework through your browser with our modern web dashboard
+                and full GUI application support via noVNC
+            </p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-globe"></i>
+                    <span>Browser-based Access</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-desktop"></i>
+                    <span>GUI Applications</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Real-time Monitoring</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-rocket"></i>
+                    <span>Quick Setup</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Overview Section -->
+    <section id="overview" class="webapp-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-sparkles"></i>
+                    <span>Modern Interface</span>
+                </div>
+                <h2>Complete Web Solution</h2>
+                <p class="subtitle">
+                    Experience CoreSecurityFramework through a comprehensive web interface that combines
+                    monitoring, management, and full GUI application access in one seamless platform.
+                </p>
+            </div>
+
+            <div class="feature-cards-grid">
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Web Dashboard</h3>
+                    <p>Monitor your security environment with real-time system metrics, resource usage, and
+                        comprehensive status overview.</p>
+                    <ul class="feature-list-modern">
+                        <li>Real-time system monitoring</li>
+                        <li>Module status overview</li>
+                        <li>Configuration management</li>
+                        <li>User-friendly interface</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-modern featured">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>GUI Applications Support</h3>
+                    <p>Access the full power of graphical security tools directly through your browser with our noVNC
+                        integration.</p>
+                    <ul class="feature-list-modern">
+                        <li>Complete desktop environment</li>
+                        <li>All GUI security tools</li>
+                        <li>File management capabilities</li>
+                        <li>No client software required</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Centralized Management</h3>
+                    <p>Manage modules, configurations, and system settings through an intuitive web-based control panel.
+                    </p>
+                    <ul class="feature-list-modern">
+                        <li>Module installation & updates</li>
+                        <li>System configuration</li>
+                        <li>Log management</li>
+                        <li>Remote administration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Access Section -->
+    <section id="access" class="webapp-section access-section">
+        <div class="container">
+            <div class="access-content">
+                <div class="section-header-modern">
+                    <div class="section-badge-modern">
+                        <i class="fas fa-link"></i>
+                        <span>Simple Access</span>
+                    </div>
+                    <h2>One URL, Full Access</h2>
+                    <p class="subtitle">
+                        Access your complete security environment through a single web address.
+                        No complex setup, no additional software required.
+                    </p>
+                </div>
+
+                <div class="demo-video-container">
+                    <video id="demoVideo2" muted controls>
+                        <source src="assets/webapp.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="access-url-card">
+                    <h4><i class="fas fa-globe"></i> Web Dashboard</h4>
+                    <div class="url-display">http://&lt;HOST-IP&gt;:5000</div>
+                    <p style="margin-top: 1rem; opacity: 0.9;">
+                        Replace &lt;HOST-IP&gt; with your server's IP address to access the full web interface
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="webapp-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-star"></i>
+                    <span>Powerful Features</span>
+                </div>
+                <h2>Everything You Need</h2>
+                <p class="subtitle">
+                    Our web interface combines the best of both worlds: the convenience of web-based management
+                    with the full power of desktop applications.
+                </p>
+            </div>
+
+            <div class="feature-cards-grid">
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>System Monitoring</h3>
+                    <p>Keep track of your system's health with comprehensive monitoring tools.</p>
+                    <ul class="feature-list-modern">
+                        <li>CPU and memory usage</li>
+                        <li>Network statistics</li>
+                        <li>Active sessions</li>
+                        <li>Performance metrics</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h3>Module Management</h3>
+                    <p>Install, update, and manage security modules with ease.</p>
+                    <ul class="feature-list-modern">
+                        <li>Browse available modules</li>
+                        <li>One-click installation</li>
+                        <li>Automatic updates</li>
+                        <li>Dependency management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card-modern">
+                    <div class="feature-icon-modern">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>GUI Tools Access</h3>
+                    <p>Run graphical applications directly in your browser.</p>
+                    <ul class="feature-list-modern">
+                        <li>Full mouse and keyboard support</li>
+                        <li>Clipboard integration</li>
+                        <li>Fullscreen mode</li>
+                        <li>Multi-window support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Section -->
+    <section id="setup" class="webapp-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-rocket"></i>
+                    <span>Quick Setup</span>
+                </div>
+                <h2>Get Started in Minutes</h2>
+                <p class="subtitle">
+                    Setting up the web interface is straightforward with our automated installation process.
+                    Choose your preferred deployment method and get running quickly.
+                </p>
+            </div>
+
+            <div class="setup-process">
+                <div class="setup-step-modern">
+                    <div class="step-number-modern">1</div>
+                    <div class="step-content-modern">
+                        <h4>Clone the Repository</h4>
+                        <p>Download the web application from our official repository.</p>
+                        <div class="code-block-modern">
+                            git clone https://github.com/CoreSecFrame/CoreSecFrameWebApp
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-step-modern">
+                    <div class="step-number-modern">2</div>
+                    <div class="step-content-modern">
+                        <h4>Run the Setup Script</h4>
+                        <p>Execute the automated setup script to configure your environment.</p>
+                        <div class="code-block-modern">
+                            chmod +x setup.sh && ./setup.sh
+                        </div>
+                        <div class="setup-info-modern">
+                            <h5><i class="fas fa-info-circle"></i> Setup Options Available</h5>
+                            <div class="setup-options">
+                                <div class="setup-option">
+                                    <div class="option-number">1</div>
+                                    <div>
+                                        <strong>Local Installation</strong><br>
+                                        Install directly on your system for development
+                                    </div>
+                                </div>
+                                <div class="setup-option">
+                                    <div class="option-number">2</div>
+                                    <div>
+                                        <strong>Docker Container</strong><br>
+                                        Create isolated container environment (requires Docker)
+                                    </div>
+                                </div>
+                                <div class="setup-option">
+                                    <div class="option-number">3</div>
+                                    <div>
+                                        <strong>Database Reset</strong><br>
+                                        Reset database structure (removes all data)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setup-step-modern">
+                    <div class="step-number-modern">3</div>
+                    <div class="step-content-modern">
+                        <h4>Access Your Interface</h4>
+                        <p>Open your browser and navigate to the web interface to start using CoreSecurityFramework.</p>
+                        <div class="access-url-card">
+                            <h4><i class="fas fa-external-link-alt"></i> Ready to Access</h4>
+                            <div class="url-display">http://&lt;HOST-IP&gt;:5000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="webapp-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>Feature Comparison</span>
+                </div>
+                <h2>Web vs CLI Interface</h2>
+                <p class="subtitle">
+                    Compare the capabilities of our web interface against the traditional command-line approach
+                    to choose the best method for your workflow.
+                </p>
+            </div>
+
+            <div class="comparison-modern">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Web Interface</th>
+                            <th>CLI Interface</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>System Monitoring</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Real-time dashboard</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Command-based status</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Module Management</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Visual interface</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Full control</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>GUI Applications</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Full browser access</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-times text-muted"></i>
+                                    <span>Not available</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>File Management</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Desktop file manager</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Command-line tools</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Multi-user Access</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Multiple sessions</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-minus text-warning"></i>
+                                    <span>Limited</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Remote Access</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-check text-success"></i>
+                                    <span>Any modern browser</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-minus text-warning"></i>
+                                    <span>SSH required</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Learning Curve</strong></td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-smile text-success"></i>
+                                    <span>User-friendly</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="feature-check">
+                                    <i class="fas fa-graduation-cap text-warning"></i>
+                                    <span>Technical knowledge needed</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting Section -->
+    <section id="troubleshooting" class="webapp-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-tools"></i>
+                    <span>Support & Help</span>
+                </div>
+                <h2>Troubleshooting Guide</h2>
+                <p class="subtitle">
+                    Common issues and their solutions to help you get the most out of your web interface experience.
+                </p>
+            </div>
+
+            <div class="trouble-cards">
+                <div class="trouble-card-modern">
+                    <div class="trouble-header-modern">
+                        <div class="trouble-icon-modern">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="trouble-content-modern">
+                            <h4>Cannot Access Web Interface</h4>
+                            <p>Web dashboard not loading at the expected address</p>
+                        </div>
+                    </div>
+                    <div class="solutions-list">
+                        <h5><i class="fas fa-lightbulb"></i> Solutions</h5>
+                        <ul>
+                            <li>Verify the application is running: <code>ps aux | grep python</code></li>
+                            <li>Check if port 5000 is available: <code>netstat -tulpn | grep :5000</code></li>
+                            <li>Ensure firewall allows connections on port 5000</li>
+                            <li>Try accessing via server IP instead of localhost</li>
+                            <li>Check for any error messages in the application logs</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="trouble-card-modern">
+                    <div class="trouble-header-modern">
+                        <div class="trouble-icon-modern">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="trouble-content-modern">
+                            <h4>noVNC Connection Issues</h4>
+                            <p>Remote desktop not connecting or displaying properly</p>
+                        </div>
+                    </div>
+                    <div class="solutions-list">
+                        <h5><i class="fas fa-lightbulb"></i> Solutions</h5>
+                        <ul>
+                            <li>Wait 30-60 seconds after startup for VNC server initialization</li>
+                            <li>Check browser console for WebSocket connection errors</li>
+                            <li>Try different browser or disable browser extensions</li>
+                            <li>Verify VNC server is running: <code>ps aux | grep vnc</code></li>
+                            <li>Restart the VNC service if necessary</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="trouble-card-modern">
+                    <div class="trouble-header-modern">
+                        <div class="trouble-icon-modern">
+                            <i class="fas fa-mouse-pointer"></i>
+                        </div>
+                        <div class="trouble-content-modern">
+                            <h4>Input Issues in Desktop</h4>
+                            <p>Mouse or keyboard not working properly in remote desktop</p>
+                        </div>
+                    </div>
+                    <div class="solutions-list">
+                        <h5><i class="fas fa-lightbulb"></i> Solutions</h5>
+                        <ul>
+                            <li>Click inside the noVNC viewer to focus the session</li>
+                            <li>Use the noVNC sidebar settings to adjust input methods</li>
+                            <li>For special keys, use the noVNC virtual keyboard</li>
+                            <li>Try toggling fullscreen mode for better input handling</li>
+                            <li>Refresh the browser page if input becomes unresponsive</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="trouble-card-modern">
+                    <div class="trouble-header-modern">
+                        <div class="trouble-icon-modern">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="trouble-content-modern">
+                            <h4>Performance Issues</h4>
+                            <p>Slow response times or laggy interface</p>
+                        </div>
+                    </div>
+                    <div class="solutions-list">
+                        <h5><i class="fas fa-lightbulb"></i> Solutions</h5>
+                        <ul>
+                            <li>Check system resources and close unnecessary applications</li>
+                            <li>Use a wired connection instead of WiFi for better stability</li>
+                            <li>Reduce noVNC display quality in settings if needed</li>
+                            <li>Close other browser tabs to free up memory</li>
+                            <li>Consider upgrading server hardware for better performance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <p><span class="copyleft">&copy;</span> 2025 CoreSecurityFramework. GPL-3.0 License</p>
+            <div class="social-links">
+                <a href="https://github.com/CoreSecFrame/CoreSecFrame"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Floating navigation functionality
+        window.addEventListener('scroll', function () {
+            const floatingNav = document.getElementById('floatingNav');
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+
+            // Show floating nav after scrolling past hero section
+            if (scrollPosition > windowHeight * 0.5) {
+                floatingNav.classList.add('show');
+            } else {
+                floatingNav.classList.remove('show');
+            }
+
+            // Update active navigation item based on scroll position
+            const sections = document.querySelectorAll('.webapp-section');
+            const navItems = document.querySelectorAll('.floating-nav-item');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for animation effects
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.feature-card-modern, .setup-step-modern, .trouble-card-modern').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

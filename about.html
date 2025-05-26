@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,597 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos específicos para about mejorado */
+        .about-hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #059669 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circuit" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 0 20 L 20 20 L 20 0 M 20 20 L 40 20 M 20 40 L 20 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23circuit)"/></svg>');
+        }
+
+        .about-container {
+            display: block;
+            padding: 0;
+        }
+
+        /* Navegación flotante */
+        .floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            padding: 1rem 0;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .floating-nav.show {
+            display: block;
+        }
+
+        .floating-nav-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .floating-nav-item:hover,
+        .floating-nav-item.active {
+            background: var(--background-color);
+            color: var(--secondary-color);
+            border-left-color: var(--secondary-color);
+        }
+
+        /* Secciones con layout mejorado */
+        .about-section {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .about-section:nth-child(even) {
+            background: var(--background-color);
+        }
+
+        .about-section:nth-child(odd) {
+            background: var(--surface-color);
+        }
+
+        /* Headers de sección modernos */
+        .section-header-modern {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem auto;
+        }
+
+        .section-header-modern h2 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header-modern .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .section-badge-modern {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Mission statement */
+        .mission-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .mission-content p {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .mission-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Stats grid moderno */
+        .stats-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+        }
+
+        .stat-card-modern:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number-modern {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label-modern {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Philosophy pillars */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .pillar-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .pillar-card-modern:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pillar-icon-modern {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem auto;
+            box-shadow: var(--shadow-md);
+        }
+
+        .pillar-card-modern h3 {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .pillar-card-modern p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Team section */
+        .team-intro {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            text-align: center;
+            margin: 3rem 0;
+            border: 1px solid var(--success-color);
+        }
+
+        .team-intro h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .team-intro p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Values grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .value-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .value-card-modern:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .value-header-modern {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-icon-modern {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .value-header-modern h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .value-card-modern p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Community section */
+        .community-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--success-color) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .community-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="community" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23community)"/></svg>');
+        }
+
+        .community-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .community-content h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .community-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .community-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .community-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .community-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .community-btn.primary {
+            background: white;
+            color: var(--success-color);
+        }
+
+        .community-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /* Timeline section */
+        .timeline-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 2rem;
+            top: 4rem;
+            bottom: -3rem;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .timeline-icon {
+            flex-shrink: 0;
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .timeline-content h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content .timeline-date {
+            font-size: 0.875rem;
+            color: var(--success-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Contact section */
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .contact-card-modern {
+            background: var(--surface-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .contact-card-modern:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contact-icon-modern {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin: 0 auto 1rem auto;
+        }
+
+        .contact-card-modern h5 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card-modern p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .contact-card-modern a {
+            color: var(--success-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .contact-card-modern a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .floating-nav {
+                display: none !important;
+            }
+
+            .section-header-modern h2 {
+                font-size: 2.25rem;
+            }
+
+            .stats-grid-modern {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pillars-grid,
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .community-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .timeline-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .timeline-item::before {
+                display: none;
+            }
+
+            .contact-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .floating-nav {
+                display: block;
+            }
+        }
+
+        /* Special animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pillar-icon-modern:hover {
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .stat-number-modern {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card-modern:hover .stat-number-modern {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="nav">
@@ -18,12 +609,21 @@
             <h2 class="logo">CoreSecurity</h2>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="docs.html">Documentation</a>
-                <a href="docker.html">Dockerfile</a>
-                <a href="about.html">About Us</a>
-                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
+                <a href="webapp.html">Web Interface</a>
+                <a href="docker.html">Docker</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/orgs/CoreSecFrame/repositories">GitHub</a>
             </div>
         </div>
+    </nav>
+
+    <!-- Floating Navigation -->
+    <nav class="floating-nav" id="floatingNav">
+        <a href="#mission" class="floating-nav-item">Our Mission</a>
+        <a href="#philosophy" class="floating-nav-item">Philosophy</a>
+        <a href="#team" class="floating-nav-item">Team</a>
+        <a href="#journey" class="floating-nav-item">Our Journey</a>
+        <a href="#contact" class="floating-nav-item">Contact</a>
     </nav>
 
     <!-- Hero / Header -->
@@ -31,14 +631,43 @@
         <div class="container">
             <h1>About Our Framework</h1>
             <p class="header-subtitle">Simplifying, Unifying & Modularizing Cybersecurity Tools</p>
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <i class="fas fa-heart"></i>
+                    <span>Open Source</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-users"></i>
+                    <span>Community Driven</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Student Built</span>
+                </div>
+                <div class="hero-feature">
+                    <i class="fas fa-rocket"></i>
+                    <span>Innovation Focus</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Introduction Section -->
-    <section class="intro">
+    <!-- Mission Section -->
+    <section id="mission" class="about-section">
         <div class="container">
-            <div class="intro-content">
-                <h2>Our Open-Source Mission</h2>
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-bullseye"></i>
+                    <span>Our Mission</span>
+                </div>
+                <h2>Democratizing Cybersecurity</h2>
+                <p class="subtitle">
+                    Making powerful security tools accessible to everyone through 
+                    innovative design and community collaboration.
+                </p>
+            </div>
+
+            <div class="mission-content">
                 <p>
                     CoreSecurityFramework is an open-source project created by four cybersecurity students who share an unwavering passion for this field. Our goal is to <strong>simplify</strong>, <strong>unify</strong>, and <strong>modularize</strong> the use of all kinds of cybersecurity tools, so that professionals and enthusiasts alike can leverage them in a centralized and effective manner.
                 </p>
@@ -46,55 +675,437 @@
                     We firmly believe in collaboration and constant learning, which is why community contributions are vital for better and more numerous modules. As we move forward, we will continue to add support for more tools and functionalities, always focusing on usability and the expansion of the security ecosystem.
                 </p>
                 <p>
-                    With your involvement, this initiative will keep growing and providing new ways to automate, deploy, and fully harness existing cybersecurity tools. Join us and help shape the evolution of CoreSecurityFramework!
+                    With your involvement, this initiative will keep growing and providing new ways to automate, deploy, and fully harness existing cybersecurity tools. <strong>Join us and help shape the evolution of CoreSecurityFramework!</strong>
                 </p>
 
-                <div class="stats-grid">
-                    <div class="stat">
-                        <div class="stat-number">4</div>
-                        <div class="stat-label">Core Devs</div>
+                <div class="stats-grid-modern">
+                    <div class="stat-card-modern">
+                        <div class="stat-number-modern">4</div>
+                        <div class="stat-label-modern">Core Developers</div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-number">Open</div>
-                        <div class="stat-label">Source</div>
+                    <div class="stat-card-modern">
+                        <div class="stat-number-modern">100%</div>
+                        <div class="stat-label-modern">Open Source</div>
                     </div>
-                    <div class="stat">
-                        <div class="stat-number">∞</div>
-                        <div class="stat-label">Potential Growth</div>
+                    <div class="stat-card-modern">
+                        <div class="stat-number-modern">∞</div>
+                        <div class="stat-label-modern">Potential Growth</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Philosophy / Pillars -->
-    <section id="philosophy" class="features container">
-        <div class="feature">
-            <i class="fas fa-lock"></i>
-            <h3>Security First</h3>
-            <p>Built upon proactive security principles and regular code reviews.</p>
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="about-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Our Philosophy</span>
+                </div>
+                <h2>Core Principles</h2>
+                <p class="subtitle">
+                    The fundamental beliefs that guide our development process and community interactions.
+                </p>
+            </div>
+
+            <div class="pillars-grid">
+                <div class="pillar-card-modern">
+                    <div class="pillar-icon-modern">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Security First</h3>
+                    <p>Built upon proactive security principles and regular code reviews to ensure the highest standards of protection.</p>
+                </div>
+                <div class="pillar-card-modern">
+                    <div class="pillar-icon-modern">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community Driven</h3>
+                    <p>Open collaboration is the cornerstone for expanding and improving the module ecosystem through shared knowledge.</p>
+                </div>
+                <div class="pillar-card-modern">
+                    <div class="pillar-icon-modern">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Performance Focused</h3>
+                    <p>Optimized to work efficiently from low-resource environments to large-scale deployments without compromise.</p>
+                </div>
+            </div>
         </div>
-        <div class="feature">
-            <i class="fas fa-users"></i>
-            <h3>Community Driven</h3>
-            <p>Open collaboration is the cornerstone for expanding and improving the module ecosystem.</p>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="about-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-users"></i>
+                    <span>Our Team</span>
+                </div>
+                <h2>Student Developers</h2>
+                <p class="subtitle">
+                    A passionate group of cybersecurity students dedicated to creating
+                    innovative solutions for the security community.
+                </p>
+            </div>
+
+            <div class="team-intro">
+                <h3>Four Minds, One Vision</h3>
+                <p>
+                    We are four cybersecurity students united by our passion for technology and our desire to make a positive impact in the security community. Our diverse backgrounds and complementary skills allow us to tackle complex challenges from multiple perspectives, always with the goal of creating tools that are both powerful and accessible.
+                </p>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card-modern">
+                    <div class="value-header-modern">
+                        <div class="value-icon-modern">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <h4>Modularity</h4>
+                    </div>
+                    <p>We embrace modular design principles that allow for flexibility, extensibility, and easier maintenance of our security framework.</p>
+                </div>
+
+                <div class="value-card-modern">
+                    <div class="value-header-modern">
+                        <div class="value-icon-modern">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Quality</h4>
+                    </div>
+                    <p>We are committed to delivering high-quality software through rigorous testing, code reviews, and continuous improvement processes.</p>
+                </div>
+            </div>
         </div>
-        <div class="feature">
-            <i class="fas fa-rocket"></i>
-            <h3>Performance Focused</h3>
-            <p>Optimized to work efficiently from low-resource environments to large-scale deployments.</p>
+    </section>
+
+    <!-- Journey Section -->
+    <section id="journey" class="about-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Our Journey</span>
+                </div>
+                <h2>The Story So Far</h2>
+                <p class="subtitle">
+                    From a simple idea to a comprehensive cybersecurity framework.
+                    Here's how our project has evolved over time.
+                </p>
+            </div>
+
+            <div class="timeline-section">
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>The Idea</h4>
+                        <div class="timeline-date">Early 2024</div>
+                        <p>Four cybersecurity students recognized the need for a unified platform that could simplify the complexity of managing multiple security tools. The idea of CoreSecurityFramework was born from late-night study sessions and countless hours spent juggling different security utilities.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>First Lines of Code</h4>
+                        <div class="timeline-date">Mid 2024</div>
+                        <p>Development began with a simple Python script designed to automate common security tasks. What started as a personal productivity tool quickly evolved into something much more ambitious as we realized its potential to help the broader security community.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Modular Architecture</h4>
+                        <div class="timeline-date">Late 2024</div>
+                        <p>We redesigned the framework with modularity at its core, allowing for easy integration of new tools and functionalities. This architectural decision became the foundation for everything that followed, enabling rapid expansion and community contributions.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Web Interface Launch</h4>
+                        <div class="timeline-date">Early 2025</div>
+                        <p>Recognizing the need for accessibility, we developed a comprehensive web interface that brings the power of command-line security tools to a browser-based environment. The addition of noVNC support opened up even more possibilities for remote security operations.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fab fa-docker"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>Docker Integration</h4>
+                        <div class="timeline-date">Present</div>
+                        <p>To address deployment complexity and environment consistency, we fully embraced containerization. Our Docker integration now provides one-click deployment with complete environment isolation, making the framework truly portable and reliable.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h4>The Future</h4>
+                        <div class="timeline-date">Looking Ahead</div>
+                        <p>We're continuously working on new features, improvements, and integrations. Our roadmap includes advanced automation capabilities, enhanced collaboration features, and expanded tool support. The journey is just beginning, and we're excited about what lies ahead.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="about-section">
+        <div class="container">
+            <div class="section-header-modern">
+                <div class="section-badge-modern">
+                    <i class="fas fa-envelope"></i>
+                    <span>Get In Touch</span>
+                </div>
+                <h2>Connect With Us</h2>
+                <p class="subtitle">
+                    We love hearing from our community! Whether you have questions, suggestions, 
+                    or just want to say hello, don't hesitate to reach out.
+                </p>
+            </div>
+
+            <div class="contact-cards">
+                <div class="contact-card-modern">
+                    <div class="contact-icon-modern">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <h5>GitHub</h5>
+                    <p>Contribute to the project, report issues, or browse our code</p>
+                    <a href="https://github.com/orgs/CoreSecFrame/repositories" target="_blank">Visit Repository</a>
+                </div>
+
+                <div class="contact-card-modern">
+                    <div class="contact-icon-modern">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h5>Bug Reports</h5>
+                    <p>Found an issue? Help us improve by reporting bugs</p>
+                    <a href="https://github.com/CoreSecFrame/CoreSecFrame/issues" target="_blank">Report Issue</a>
+                </div>
+            </div>
+
+            <div class="team-intro" style="margin-top: 3rem;">
+                <h3>Open Source Philosophy</h3>
+                <p>
+                    CoreSecurityFramework is licensed under GPL-3.0, ensuring that it remains free and open source forever. 
+                    We believe that cybersecurity tools should be accessible to everyone, and our open-source approach 
+                    enables transparency, community review, and collaborative improvement that benefits the entire security community.
+                </p>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
         <div class="container footer-content">
-            <p>&copy; 2025 CoreSecurityFramework. GPL-3.0 License</p>
+            <p><span class="copyleft">&copy;</span> 2025 CoreSecurityFramework. GPL-3.0 License</p>
             <div class="social-links">
                 <a href="https://github.com/CoreSecFrame/CoreSecFrame"><i class="fab fa-github"></i></a>
                 <a href="#"><i class="fab fa-discord"></i></a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Floating navigation functionality
+        window.addEventListener('scroll', function() {
+            const floatingNav = document.getElementById('floatingNav');
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            
+            // Show floating nav after scrolling past hero section
+            if (scrollPosition > windowHeight * 0.5) {
+                floatingNav.classList.add('show');
+            } else {
+                floatingNav.classList.remove('show');
+            }
+            
+            // Update active navigation item based on scroll position
+            const sections = document.querySelectorAll('.about-section');
+            const navItems = document.querySelectorAll('.floating-nav-item');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for animation effects
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.querySelectorAll('.stat-card-modern, .pillar-card-modern, .value-card-modern, .timeline-content, .contact-card-modern').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target, duration = 2000) {
+            let current = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target === Infinity ? '∞' : Math.ceil(target);
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.ceil(current);
+                }
+            }, 16);
+        }
+
+        // Trigger counter animations when stats come into view
+        const statsObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numberElement = entry.target.querySelector('.stat-number-modern');
+                    const text = numberElement.textContent;
+                    
+                    if (text === '∞') {
+                        // Special animation for infinity symbol
+                        let chars = ['∞', '∞', '∞'];
+                        let index = 0;
+                        const infinityTimer = setInterval(() => {
+                            numberElement.textContent = chars[index % chars.length];
+                            index++;
+                            if (index > 10) clearInterval(infinityTimer);
+                        }, 100);
+                    } else if (text.includes('%')) {
+                        animateCounter(numberElement, 100);
+                        setTimeout(() => {
+                            numberElement.textContent = '100%';
+                        }, 2000);
+                    } else {
+                        const target = parseInt(text);
+                        if (!isNaN(target)) {
+                            numberElement.textContent = '0';
+                            animateCounter(numberElement, target);
+                        }
+                    }
+                    
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-card-modern').forEach(card => {
+            statsObserver.observe(card);
+        });
+
+        // Add hover effect to timeline items
+        document.querySelectorAll('.timeline-content').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.borderLeft = '4px solid var(--success-color)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.borderLeft = 'none';
+            });
+        });
+
+        // Add parallax effect to hero background
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.about-hero::before');
+            const speed = 0.5;
+            
+            if (parallax) {
+                const yPos = -(scrolled * speed);
+                parallax.style.transform = `translateY(${yPos}px)`;
+            }
+        });
+
+        // Add typing effect to mission statement
+        function typeWriter(element, text, speed = 50) {
+            let i = 0;
+            element.innerHTML = '';
+            
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            
+            type();
+        }
+
+        // Trigger typing animation when mission section comes into view
+        const missionObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const missionText = entry.target.querySelector('.mission-content p:first-child');
+                    if (missionText && !missionText.dataset.typed) {
+                        const originalText = missionText.textContent;
+                        typeWriter(missionText, originalText, 30);
+                        missionText.dataset.typed = 'true';
+                    }
+                    missionObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        const missionSection = document.getElementById('mission');
+        if (missionSection) {
+            missionObserver.observe(missionSection);
+        }
+    </script>
 </body>
-</html>

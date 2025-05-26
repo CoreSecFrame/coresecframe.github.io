@@ -3,17 +3,188 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>CoreSecurity - Home</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoreSecurity - Advanced Cybersecurity Framework</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <meta name="description"
-          content="Open-source Python framework for network security, forensic analysis, and penetration testing. Designed for security professionals and ethical hackers."/>
-    <meta property="og:title" content="CoreSecurityFramework"/>
-    <meta property="og:description" content="Innovative Python Cybersecurity Toolkit"/>
+        content="Python framework with web interface and remote desktop access for network security, forensic analysis, and penetration testing." />
+    <meta property="og:title" content="CoreSecurityFramework" />
+    <meta property="og:description" content="Modular Python Framework with Web Interface and GUI apps support" />
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="styles.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        /* Estilos adicionales para los controles de video */
+        .demo-video-container {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: #000;
+        }
+
+        .demo-video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 0;
+        }
+
+        /* Controles personalizados */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .demo-video-container:hover .video-controls {
+            opacity: 1;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-pause-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .play-pause-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 2px;
+            transition: width 0.1s ease;
+            width: 0%;
+        }
+
+        .time-display {
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .volume-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .volume-slider {
+            width: 60px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 100%;
+            transition: width 0.1s ease;
+        }
+
+        .fullscreen-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Video principal en intro */
+        .intro .demo-video {
+            border-radius: var(--radius-lg);
+            margin-top: 3rem;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Ajustar los videos de demo para mantener proporción */
+        .demo-item .demo-video-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .demo-item video {
+            width: 100%;
+            height: auto;
+            min-height: 250px;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        /* Estilos responsive */
+        @media (max-width: 768px) {
+            .controls-row {
+                gap: 0.5rem;
+            }
+            
+            .volume-container {
+                display: none;
+            }
+            
+            .time-display {
+                min-width: 60px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -23,10 +194,10 @@
             <h2 class="logo">CoreSecurity</h2>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="docs.html">Documentation</a>
-                <a href="docker.html">Dockerfile</a>
-                <a href="about.html">About Us</a>
-                <a href="https://github.com/CoreSecFrame/CoreSecFrame">GitHub</a>
+                <a href="webapp.html">Web Interface</a>
+                <a href="docker.html">Docker</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/orgs/CoreSecFrame/repositories">GitHub</a>
             </div>
         </div>
     </nav>
@@ -35,76 +206,284 @@
     <header class="hero">
         <div class="container">
             <h1>CoreSecurityFramework</h1>
-            <p class="header-subtitle">Innovative Python Framework for Seamless Cybersecurity Operations</p>
+            <p class="header-subtitle">Modular Python Framework with Web Interface and Remote Desktop Access for
+                Complete Cybersecurity Operations</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">CLI</span>
+                    <span class="stat-label">Interface</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Web</span>
+                    <span class="stat-label">Dashboard</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">noVNC</span>
+                    <span class="stat-label">GUI Apps</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Docker</span>
+                    <span class="stat-label">Ready</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Intro con imagen y explicación -->
+    <!-- Intro -->
     <section class="intro">
         <div class="container intro-content">
-            <h2>Secure by Design, Powerful by Default</h2>
+            <h2>Two Ways to Access Your Security Tools</h2>
             <p>
-                CoreSecurityFramework is a modular environment that facilitates the centralized execution of multiple cybersecurity tools.
-                From vulnerability scanning to forensic analysis, it covers all essential phases of your security strategy.
+                CoreSecurityFramework now offers multiple access methods: traditional CLI for power users,
+                a modern web interface for management, and access through noVNC for
+                full GUI tool interaction - all containerized and ready to deploy.
             </p>
-            <video autoplay muted loop playsinline style="border-radius: 8px; margin-top: 2rem; width: 100%; display: block;">
-                <source src="assets/main.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-    </section>
-    
-    <!-- Sección de vídeos demostrativos en loop sin controles -->
-    <section class="container" style="padding: 2rem 0; text-align:center;">
-        <h2>In Action</h2>
-        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 2rem;">
-            <div>
-                <video autoplay muted loop playsinline style="border-radius: 8px; width: 100%; display: block;">
-                    <source src="assets/demo.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+
+            <div class="access-methods">
+                <div class="access-method">
+                    <div class="access-icon">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <div class="access-content">
+                        <h4>Command Line Interface</h4>
+                        <p>Direct terminal comandline personalized with enhanced CLI, autocompletion, and guided modes
+                            for new users</p>
+                        <ul class="access-features">
+                            <li>Interactive command shell</li>
+                            <li>Supports multiple terminal instances</li>
+                            <li>Module management</li>
+                            <li>Automated installations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="access-method">
+                    <div class="access-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="access-content">
+                        <h4>Web Interface</h4>
+                        <p>Browser-based management interface for monitoring, configuration, and complete operations</p>
+                        <ul class="access-features">
+                            <li>System monitoring dashboard</li>
+                            <li>Module management</li>
+                            <li>Supports multiple terminal instances</li>
+                            <li>Support for multiple users usage</li>
+                            <li>Complete GUI tool support</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div>
-                <video autoplay muted loop playsinline style="border-radius: 8px; width: 100%; display: block;">
-                    <source src="assets/shop.mp4" type="video/mp4">
+
+            <!-- Video principal con controles -->
+            <div class="demo-video-container">
+                <video id="mainVideo" class="demo-video" muted>
+                    <source src="assets/main.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+                <div class="video-controls">
+                    <div class="controls-row">
+                        <button class="play-pause-btn" onclick="togglePlay('mainVideo')">
+                            <i class="fas fa-play" id="mainVideo-icon"></i>
+                        </button>
+                        <div class="progress-container" onclick="setProgress(event, 'mainVideo')">
+                            <div class="progress-bar" id="mainVideo-progress"></div>
+                        </div>
+                        <div class="time-display" id="mainVideo-time">0:00 / 0:00</div>
+                        <div class="volume-container">
+                            <button class="volume-btn" onclick="toggleMute('mainVideo')">
+                                <i class="fas fa-volume-up" id="mainVideo-volume-icon"></i>
+                            </button>
+                            <div class="volume-slider" onclick="setVolume(event, 'mainVideo')">
+                                <div class="volume-fill" id="mainVideo-volume-fill"></div>
+                            </div>
+                        </div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('mainVideo')">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
+    <!-- Web Interface Highlight -->
+    <section class="webapp-highlight">
+        <div class="container">
+            <div class="webapp-content">
+                <div class="webapp-text">
+                    <h2>New: Web Interface with full GUI apps support</h2>
+                    <p>Access your complete security environment through any modern web browser. Our new web interface
+                        combines system monitoring with full terminal, modules and GUI apps execution.</p>
+
+                    <div class="webapp-features">
+                        <div class="webapp-feature">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Real-time system monitoring</span>
+                        </div>
+                        <div class="webapp-feature">
+                            <i class="fas fa-cogs"></i>
+                            <span>Module management interface</span>
+                        </div>
+                        <div class="webapp-feature">
+                            <i class="fas fa-desktop"></i>
+                            <span>Execute GUI apps and stream it through noVNC</span>
+                        </div>
+                        <div class="webapp-feature">
+                            <i class="fas fa-tools"></i>
+                            <span>Access classic modules through CLI and clean system terminal</span>
+                        </div>
+                    </div>
+
+                    <div class="webapp-buttons">
+                        <a href="webapp.html" class="btn-primary">
+                            <i class="fas fa-play"></i> Try Web Interface
+                        </a>
+                        <a href="docker.html" class="btn-secondary">
+                            <i class="fab fa-docker"></i> Docker Setup
+                        </a>
+                    </div>
+                </div>
+
+                <div class="webapp-preview">
+                    <div class="browser-mockup">
+                        <div class="browser-header">
+                            <div class="browser-buttons">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <div class="browser-url">http://<"HOST-IP">:5000</div>
+                        </div>
+                        <div class="browser-content">
+                            <img src="assets/web_dashboard.png" alt="CoreSecurityFramework Web Interface"
+                                class="webapp-screenshot">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Videos Section -->
+    <section class="demo-section">
+        <div class="container">
+            <h2>See All Interfaces In Action</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <h4>CLI Operations</h4>
+                    <div class="demo-video-container">
+                        <video id="demoVideo1" muted>
+                            <source src="assets/demo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-controls">
+                            <div class="controls-row">
+                                <button class="play-pause-btn" onclick="togglePlay('demoVideo1')">
+                                    <i class="fas fa-play" id="demoVideo1-icon"></i>
+                                </button>
+                                <div class="progress-container" onclick="setProgress(event, 'demoVideo1')">
+                                    <div class="progress-bar" id="demoVideo1-progress"></div>
+                                </div>
+                                <div class="time-display" id="demoVideo1-time">0:00 / 0:00</div>
+                                <div class="volume-container">
+                                    <button class="volume-btn" onclick="toggleMute('demoVideo1')">
+                                        <i class="fas fa-volume-up" id="demoVideo1-volume-icon"></i>
+                                    </button>
+                                    <div class="volume-slider" onclick="setVolume(event, 'demoVideo1')">
+                                        <div class="volume-fill" id="demoVideo1-volume-fill"></div>
+                                    </div>
+                                </div>
+                                <button class="fullscreen-btn" onclick="toggleFullscreen('demoVideo1')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Command-line interface with module management</p>
+                </div>
+                <div class="demo-item">
+                    <h4>Web Dashboard</h4>
+                    <div class="demo-video-container">
+                        <video id="demoVideo2" muted>
+                            <source src="assets/webapp.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="video-controls">
+                            <div class="controls-row">
+                                <button class="play-pause-btn" onclick="togglePlay('demoVideo2')">
+                                    <i class="fas fa-play" id="demoVideo2-icon"></i>
+                                </button>
+                                <div class="progress-container" onclick="setProgress(event, 'demoVideo2')">
+                                    <div class="progress-bar" id="demoVideo2-progress"></div>
+                                </div>
+                                <div class="time-display" id="demoVideo2-time">0:00 / 0:00</div>
+                                <div class="volume-container">
+                                    <button class="volume-btn" onclick="toggleMute('demoVideo2')">
+                                        <i class="fas fa-volume-up" id="demoVideo2-volume-icon"></i>
+                                    </button>
+                                    <div class="volume-slider" onclick="setVolume(event, 'demoVideo2')">
+                                        <div class="volume-fill" id="demoVideo2-volume-fill"></div>
+                                    </div>
+                                </div>
+                                <button class="fullscreen-btn" onclick="toggleFullscreen('demoVideo2')">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Browser-based monitoring and remote desktop access</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features */
     <section id="features" class="features container">
         <div class="feature">
-            <i class="fas fa-bug"></i>
-            <h3>Penetration Testing</h3>
-            <p>Integra de forma sencilla módulos de detección de vulnerabilidades y herramientas de explotación.</p>
+            <i class="fas fa-puzzle-piece"></i>
+            <h3>Modular Architecture</h3>
+            <p>Extensible framework supporting custom modules with automatic dependency management and community-driven development.</p>
         </div>
         <div class="feature">
             <i class="fas fa-terminal"></i>
-            <h3>CLI Interface</h3>
-            <p>Poderosa interfaz de línea de comandos con autocompletado para un flujo de trabajo productivo.</p>
+            <h3>Enhanced CLI</h3>
+            <p>Advanced command-line interface with intelligent autocompletion, guided modes, and comprehensive help system.</p>
         </div>
         <div class="feature">
-            <i class="fas fa-code-branch"></i>
-            <h3>Modular Architecture</h3>
-            <p>Extiende el framework con tus propios módulos y colabora con la comunidad para crear nuevas herramientas.</p>
+            <i class="fas fa-globe"></i>
+            <h3>Web Interface</h3>
+            <p>Modern browser-based interface for system monitoring, configuration management, and remote access coordination.</p>
         </div>
         <div class="feature">
-            <i class="fas fa-shield-alt"></i>
-            <h3>Full Deployability</h3>
-            <p>Implementación sencilla que permite comenzar a trabajar en cuestión de minutos.</p>
+            <i class="fas fa-desktop"></i>
+            <h3>Remote Desktop</h3>
+            <p>Full Linux desktop environment accessible via noVNC, providing complete access to GUI security tools through your browser.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-download"></i>
+            <h3>Auto-Deployment</h3>
+            <p>Streamlined installation process with Docker containerization and automatic security tool provisioning.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-shield-virus"></i>
+            <h3>Security Focus</h3>
+            <p>Built specifically for cybersecurity professionals with integrated penetration testing and vulnerability assessment capabilities.</p>
         </div>
     </section>
 
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
-            <h2>Deploy it completly on Docker</h2>
-            <p>Deploy your own CoreSecurityFramework instance with Docker.</p>
-            <a href="docker.html" class="cta-btn">
-                <i class="fas fa-book"></i> Docker Guide
-            </a>
+            <h2>Deploy Your Security Environment</h2>
+            <p>Get started with CoreSecurityFramework and access your tools through CLI, web interface, or remote
+                desktop.</p>
+            <div class="cta-buttons">
+                <a href="webapp.html" class="cta-btn primary">
+                    <i class="fas fa-desktop"></i> Web Interface Guide
+                </a>
+                <a href="docker.html" class="cta-btn secondary">
+                    <i class="fab fa-docker"></i> Docker Deployment
+                </a>
+            </div>
         </div>
     </section>
 
@@ -118,8 +497,142 @@
             </div>
         </div>
         <div class="container footer-credit">
-            <p>Crafted with passion by cybersecurity enthusiasts</p>
+            <p>Built by cybersecurity students • Now with Web Interface and Remote Desktop Access</p>
         </div>
     </footer>
+
+    <script>
+        // Funciones para controlar los videos
+        function togglePlay(videoId) {
+            const video = document.getElementById(videoId);
+            const icon = document.getElementById(videoId + '-icon');
+            
+            if (video.paused) {
+                video.play();
+                icon.className = 'fas fa-pause';
+            } else {
+                video.pause();
+                icon.className = 'fas fa-play';
+            }
+        }
+
+        function updateProgress(videoId) {
+            const video = document.getElementById(videoId);
+            const progressBar = document.getElementById(videoId + '-progress');
+            const timeDisplay = document.getElementById(videoId + '-time');
+            
+            const progress = (video.currentTime / video.duration) * 100;
+            progressBar.style.width = progress + '%';
+            
+            const currentTime = formatTime(video.currentTime);
+            const duration = formatTime(video.duration);
+            timeDisplay.textContent = currentTime + ' / ' + duration;
+        }
+
+        function setProgress(event, videoId) {
+            const video = document.getElementById(videoId);
+            const progressContainer = event.currentTarget;
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            video.currentTime = percent * video.duration;
+        }
+
+        function toggleMute(videoId) {
+            const video = document.getElementById(videoId);
+            const volumeIcon = document.getElementById(videoId + '-volume-icon');
+            const volumeFill = document.getElementById(videoId + '-volume-fill');
+            
+            if (video.muted) {
+                video.muted = false;
+                volumeIcon.className = 'fas fa-volume-up';
+                volumeFill.style.width = (video.volume * 100) + '%';
+            } else {
+                video.muted = true;
+                volumeIcon.className = 'fas fa-volume-mute';
+                volumeFill.style.width = '0%';
+            }
+        }
+
+        function setVolume(event, videoId) {
+            const video = document.getElementById(videoId);
+            const volumeSlider = event.currentTarget;
+            const volumeFill = document.getElementById(videoId + '-volume-fill');
+            const volumeIcon = document.getElementById(videoId + '-volume-icon');
+            
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            video.volume = Math.max(0, Math.min(1, percent));
+            video.muted = false;
+            
+            volumeFill.style.width = (video.volume * 100) + '%';
+            
+            if (video.volume === 0) {
+                volumeIcon.className = 'fas fa-volume-mute';
+            } else if (video.volume < 0.5) {
+                volumeIcon.className = 'fas fa-volume-down';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up';
+            }
+        }
+
+        function toggleFullscreen(videoId) {
+            const video = document.getElementById(videoId);
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+        }
+
+        // Inicializar eventos para todos los videos
+        document.addEventListener('DOMContentLoaded', function() {
+            const videos = ['mainVideo', 'demoVideo1', 'demoVideo2'];
+            
+            videos.forEach(videoId => {
+                const video = document.getElementById(videoId);
+                if (video) {
+                    // Actualizar progreso mientras reproduce
+                    video.addEventListener('timeupdate', () => updateProgress(videoId));
+                    
+                    // Cuando el video termine
+                    video.addEventListener('ended', () => {
+                        const icon = document.getElementById(videoId + '-icon');
+                        icon.className = 'fas fa-play';
+                    });
+                    
+                    // Inicializar volumen
+                    const volumeFill = document.getElementById(videoId + '-volume-fill');
+                    if (volumeFill) {
+                        volumeFill.style.width = (video.volume * 100) + '%';
+                    }
+                    
+                    // Pausar otros videos cuando uno empiece a reproducir
+                    video.addEventListener('play', () => {
+                        videos.forEach(otherId => {
+                            if (otherId !== videoId) {
+                                const otherVideo = document.getElementById(otherId);
+                                if (otherVideo && !otherVideo.paused) {
+                                    otherVideo.pause();
+                                    const otherIcon = document.getElementById(otherId + '-icon');
+                                    otherIcon.className = 'fas fa-play';
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>
