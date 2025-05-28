@@ -37,7 +37,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
             padding: 1rem;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -65,13 +65,13 @@
         }
 
         .play-pause-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .progress-container {
             flex: 1;
             height: 4px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
             cursor: pointer;
             position: relative;
@@ -111,13 +111,13 @@
         }
 
         .volume-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .volume-slider {
             width: 60px;
             height: 4px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
             position: relative;
             cursor: pointer;
@@ -143,7 +143,7 @@
         }
 
         .fullscreen-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Video principal en intro */
@@ -160,7 +160,7 @@
             max-width: 600px;
             margin: 0 auto;
         }
-        
+
         .demo-item video {
             width: 100%;
             height: auto;
@@ -174,11 +174,11 @@
             .controls-row {
                 gap: 0.5rem;
             }
-            
+
             .volume-container {
                 display: none;
             }
-            
+
             .time-display {
                 min-width: 60px;
                 font-size: 0.75rem;
@@ -436,39 +436,6 @@
         </div>
     </section>
 
-    <!-- Features */
-    <section id="features" class="features container">
-        <div class="feature">
-            <i class="fas fa-puzzle-piece"></i>
-            <h3>Modular Architecture</h3>
-            <p>Extensible framework supporting custom modules with automatic dependency management and community-driven development.</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-terminal"></i>
-            <h3>Enhanced CLI</h3>
-            <p>Advanced command-line interface with intelligent autocompletion, guided modes, and comprehensive help system.</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-globe"></i>
-            <h3>Web Interface</h3>
-            <p>Modern browser-based interface for system monitoring, configuration management, and remote access coordination.</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-desktop"></i>
-            <h3>Remote Desktop</h3>
-            <p>Full Linux desktop environment accessible via noVNC, providing complete access to GUI security tools through your browser.</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-download"></i>
-            <h3>Auto-Deployment</h3>
-            <p>Streamlined installation process with Docker containerization and automatic security tool provisioning.</p>
-        </div>
-        <div class="feature">
-            <i class="fas fa-shield-virus"></i>
-            <h3>Security Focus</h3>
-            <p>Built specifically for cybersecurity professionals with integrated penetration testing and vulnerability assessment capabilities.</p>
-        </div>
-    </section>
 
     <!-- CTA Section -->
     <section class="cta">
@@ -483,6 +450,15 @@
                 <a href="docker.html" class="cta-btn secondary">
                     <i class="fab fa-docker"></i> Docker Deployment
                 </a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="section-header-modern">
+                <h2 style="color: white;">Now Available on WSL</h2>
+                <p class="subtitle" style="color: rgba(255,255,255,0.9);">
+                    You can now deploy and run CoreSecurityFramework directly on Windows Subsystem for Linux.<br>
+                    Enjoy seamless integration with your Windows environment and full web interface capabilities.
+                </p>
             </div>
         </div>
     </section>
@@ -506,7 +482,7 @@
         function togglePlay(videoId) {
             const video = document.getElementById(videoId);
             const icon = document.getElementById(videoId + '-icon');
-            
+
             if (video.paused) {
                 video.play();
                 icon.className = 'fas fa-pause';
@@ -520,10 +496,10 @@
             const video = document.getElementById(videoId);
             const progressBar = document.getElementById(videoId + '-progress');
             const timeDisplay = document.getElementById(videoId + '-time');
-            
+
             const progress = (video.currentTime / video.duration) * 100;
             progressBar.style.width = progress + '%';
-            
+
             const currentTime = formatTime(video.currentTime);
             const duration = formatTime(video.duration);
             timeDisplay.textContent = currentTime + ' / ' + duration;
@@ -541,7 +517,7 @@
             const video = document.getElementById(videoId);
             const volumeIcon = document.getElementById(videoId + '-volume-icon');
             const volumeFill = document.getElementById(videoId + '-volume-fill');
-            
+
             if (video.muted) {
                 video.muted = false;
                 volumeIcon.className = 'fas fa-volume-up';
@@ -558,14 +534,14 @@
             const volumeSlider = event.currentTarget;
             const volumeFill = document.getElementById(videoId + '-volume-fill');
             const volumeIcon = document.getElementById(videoId + '-volume-icon');
-            
+
             const rect = volumeSlider.getBoundingClientRect();
             const percent = (event.clientX - rect.left) / rect.width;
             video.volume = Math.max(0, Math.min(1, percent));
             video.muted = false;
-            
+
             volumeFill.style.width = (video.volume * 100) + '%';
-            
+
             if (video.volume === 0) {
                 volumeIcon.className = 'fas fa-volume-mute';
             } else if (video.volume < 0.5) {
@@ -588,34 +564,34 @@
 
         function formatTime(seconds) {
             if (isNaN(seconds)) return '0:00';
-            
+
             const minutes = Math.floor(seconds / 60);
             const remainingSeconds = Math.floor(seconds % 60);
             return minutes + ':' + (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
         }
 
         // Inicializar eventos para todos los videos
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const videos = ['mainVideo', 'demoVideo1', 'demoVideo2'];
-            
+
             videos.forEach(videoId => {
                 const video = document.getElementById(videoId);
                 if (video) {
                     // Actualizar progreso mientras reproduce
                     video.addEventListener('timeupdate', () => updateProgress(videoId));
-                    
+
                     // Cuando el video termine
                     video.addEventListener('ended', () => {
                         const icon = document.getElementById(videoId + '-icon');
                         icon.className = 'fas fa-play';
                     });
-                    
+
                     // Inicializar volumen
                     const volumeFill = document.getElementById(videoId + '-volume-fill');
                     if (volumeFill) {
                         volumeFill.style.width = (video.volume * 100) + '%';
                     }
-                    
+
                     // Pausar otros videos cuando uno empiece a reproducir
                     video.addEventListener('play', () => {
                         videos.forEach(otherId => {

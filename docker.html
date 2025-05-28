@@ -677,10 +677,7 @@
             <a href="#overview">Overview</a>
             <a href="#cli-deployment">CLI Docker Deployment</a>
             <a href="#web-deployment">Web Docker Deployment</a>
-            <a href="#persistent-storage">Persistent Storage</a>
             <a href="#container-management">Container Management</a>
-            <a href="#production-setup">Production Setup</a>
-            <a href="#troubleshooting">Troubleshooting</a>
         </aside>
 
         <!-- Content -->
@@ -816,27 +813,6 @@ CMD ["coresecframe"]
                 <p>WORKING ON THIS FEATURE</p>
             </section>
 
-            <!-- Persistent Storage -->
-            <section id="persistent-storage" class="doc-section">
-                <h2>Persistent Storage</h2>
-                <p>Configure persistent storage for your CoreSecurityFramework data and configurations.</p>
-
-                <div class="code-snippet">
-                    <pre><code># Create named volumes
-docker volume create coresec_data
-docker volume create coresec_config
-
-# Run with persistent storage
-docker run -d \
-  -p 8080:8080 \
-  -p 6080:6080 \
-  -v coresec_data:/opt/coresecframe/data \
-  -v coresec_config:/opt/coresecframe/config \
-  --name coresecframe \
-  coresecframe</code></pre>
-                </div>
-            </section>
-
             <!-- Container Management -->
             <section id="container-management" class="doc-section">
                 <h2>Container Management</h2>
@@ -915,142 +891,6 @@ docker system prune -a</code></pre>
                     </div>
                 </div>
             </section>
-
-            <!-- Production Setup -->
-            <section id="production-setup" class="doc-section">
-                <h2>Production Setup</h2>
-                <p>Best practices for deploying CoreSecurityFramework in production environments.</p>
-
-                <div class="code-snippet">
-                    <pre><code># Production deployment with all recommended settings
-docker run -d \
-  --name coresecframe-prod \
-  --restart=unless-stopped \
-  --memory="4g" \
-  --cpus="2" \
-  -p 8080:8080 \
-  -p 6080:6080 \
-  -v coresec_data:/opt/coresecframe/data \
-  -v coresec_config:/opt/coresecframe/config \
-  -v /var/log/coresecframe:/opt/coresecframe/logs \
-  -e CORESEC_DEBUG=false \
-  -e CORESEC_AUTO_UPDATE=false \
-  coresecframe</code></pre>
-                </div>
-            </section>
-
-            <!-- Troubleshooting -->
-            <section id="troubleshooting" class="doc-section">
-                <h2>Docker Troubleshooting</h2>
-                <p>Common Docker-related issues and their solutions.</p>
-
-                <div class="troubleshooting-items">
-                    <div class="trouble-item">
-                        <h4><i class="fas fa-exclamation-triangle"></i> Container Won't Start</h4>
-                        <p><strong>Symptoms:</strong> Container exits immediately or fails to start</p>
-                        <div class="trouble-solutions">
-                            <h5>Check Docker Logs</h5>
-                            <div class="code-snippet">
-                                <pre><code>docker logs coresecframe</code></pre>
-                            </div>
-                            <h5>Verify Port Availability</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check if ports are in use
-netstat -tulpn | grep :8080
-netstat -tulpn | grep :6080
-
-# Use different ports if needed
-docker run -p 9080:8080 -p 7080:6080 ...</code></pre>
-                            </div>
-                            <h5>Check System Resources</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check available memory
-free -h
-
-# Check disk space
-df -h</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trouble-item">
-                        <h4><i class="fas fa-network-wired"></i> Network Connectivity Issues</h4>
-                        <p><strong>Symptoms:</strong> Cannot access web interfaces or container networking problems</p>
-                        <div class="trouble-solutions">
-                            <h5>Verify Port Mapping</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check port mappings
-docker port coresecframe
-
-# Test local connectivity
-curl -I http://localhost:8080</code></pre>
-                            </div>
-                            <h5>Check Firewall Settings</h5>
-                            <div class="code-snippet">
-                                <pre><code># Ubuntu/Debian
-sudo ufw status
-sudo ufw allow 8080
-sudo ufw allow 6080
-
-# CentOS/RHEL
-sudo firewall-cmd --list-ports
-sudo firewall-cmd --add-port=8080/tcp --permanent
-sudo firewall-cmd --add-port=6080/tcp --permanent</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trouble-item">
-                        <h4><i class="fas fa-memory"></i> Performance Issues</h4>
-                        <p><strong>Symptoms:</strong> Slow container performance or out of memory errors</p>
-                        <div class="trouble-solutions">
-                            <h5>Increase Resource Limits</h5>
-                            <div class="code-snippet">
-                                <pre><code># Run with more resources
-docker run -d \
- --memory="4g" \
- --cpus="2" \
- -p 8080:8080 \
- -p 6080:6080 \
- coresecframe</code></pre>
-                            </div>
-                            <h5>Monitor Resource Usage</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check real-time stats
-docker stats coresecframe
-
-# Check container processes
-docker exec coresecframe top</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="trouble-item">
-                        <h4><i class="fas fa-desktop"></i> VNC/noVNC Issues</h4>
-                        <p><strong>Symptoms:</strong> Remote desktop not working or display issues</p>
-                        <div class="trouble-solutions">
-                            <h5>Check VNC Services</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check if VNC processes are running
-docker exec coresecframe ps aux | grep vnc
-docker exec coresecframe ps aux | grep Xvfb
-
-# Restart VNC services
-docker exec coresecframe pkill -f vnc
-docker exec coresecframe pkill -f Xvfb
-docker restart coresecframe</code></pre>
-                            </div>
-                            <h5>Test VNC Connection</h5>
-                            <div class="code-snippet">
-                                <pre><code># Check if VNC port is listening
-docker exec coresecframe netstat -tulpn | grep :5900
-
-# Test websockify
-docker exec coresecframe netstat -tulpn | grep :6080</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="troubleshooting-tips">
                     <h4>General Troubleshooting Tips</h4>
