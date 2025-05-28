@@ -761,7 +761,7 @@
     </section>
 
 
-    
+
     <section class="webapp-section"
         style="background: linear-gradient(135deg, #16a34a, #0ea5e9); color: white; text-align: center;">
         <div class="container">
@@ -778,7 +778,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Setup Section -->
     <section id="setup" class="webapp-section">
         <div class="container">
@@ -815,6 +815,23 @@
                         <div class="code-block-modern">
                             chmod +x setup.sh && ./setup.sh
                         </div>
+                        <div class="setup-info-modern">
+                            <h5><i class="fas fa-info-circle"></i> WSL Compatibility Notice</h5>
+                            <p>
+                                If you are running the setup on <strong>Windows Subsystem for Linux (WSL)</strong>, you
+                                may need to convert the line endings
+                                of the script to Unix format to execute it properly.
+                            </p>
+                            <div class="code-block-modern">
+                                sudo apt install dos2unix &&
+                                dos2unix setup.sh
+                            </div>
+                            <p style="margin-top: 0.75rem;">
+                                This ensures the script is compatible with the Linux environment and avoids execution
+                                errors due to Windows-style line endings.
+                            </p>
+                        </div>
+
                         <div class="setup-info-modern">
                             <h5><i class="fas fa-info-circle"></i> Setup Options Available</h5>
                             <div class="setup-options">
